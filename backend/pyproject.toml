@@ -1,0 +1,54 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "mypy>=1.19.1",
+    "pre-commit>=4.5.1",
+    "ruff",
+]
+
+[tool.ruff]
+line-length = 79
+target-version = 'py312'
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "Q"]
+fixable = ['ALL']
+ignore = ['E101']
+
+[tool.ruff.lint.flake8-quotes]
+inline-quotes = 'single'
+multiline-quotes = "double"
+
+[tool.ruff.format]
+quote-style = 'single'
+
+[tool.mypy]
+python_version = '3.12'
+disallow_untyped_defs = true
+strict_optional = true
+exclude = [
+    'tests/',
+    '.venv/',
+    '__pycache__'
+]
+ignore_missing_imports = true
+
+
+[tool.pytest.ini_options]
+testpaths = ["tests/"]
+pythonpath = ["."]
+
+[tool.coverage.run]
+omit = [
+    "*/tests/*",
+    "*/test_*.py",
+    "*/__init__.py",
+    "*/src/config/consts.py"
+]
