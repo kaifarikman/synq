@@ -1,0 +1,17 @@
+Index: backend/app/main.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from fastapi import FastAPI\n\napp = FastAPI()\n\n\n@app.get(\"/\")\nasync def root() -> dict[str, str]:\n    return {\"message\": f\"hello\"}\n
+===================================================================
+diff --git a/backend/app/main.py b/backend/app/main.py
+--- a/backend/app/main.py	(revision 066728377ceeef4f3dd8bc88e64740f27a7f8379)
++++ b/backend/app/main.py	(date 1773764571576)
+@@ -3,6 +3,6 @@
+ app = FastAPI()
+ 
+ 
+-@app.get("/")
++@app.get('/')
+ async def root() -> dict[str, str]:
+-    return {"message": f"hello"}
++    return {'message': 'hello'}
