@@ -1,0 +1,1 @@
+"""Ошибки приложения и маппинг. InvalidEmailError, EmailAlreadyExistsError и тд"""
