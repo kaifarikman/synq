@@ -3,6 +3,6 @@ from fastapi import FastAPI
 app = FastAPI()
 
 
-@app.get("/")
+@app.get('/')
 async def root() -> dict[str, str]:
-    return {"message": f"hello"}
+    return {'message': 'hello'}
