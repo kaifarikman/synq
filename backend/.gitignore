@@ -11,6 +11,7 @@ __pycache__/
 *.so
 .idea
 ../backend/.idea
+
 # Distribution / packaging
 .Python
 build/
