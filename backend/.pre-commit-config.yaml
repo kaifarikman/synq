@@ -9,6 +9,9 @@ repos:
           - fastapi
           - pydantic
           - typing-extensions
+          - dotenv
+          - sqlalchemy
+          - alembic
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.15.5
