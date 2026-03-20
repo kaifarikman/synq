@@ -8,7 +8,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from app.db import Base
 
 
-class User(Base):
+class UserModel(Base):
     __tablename__ = 'users'
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -16,7 +16,7 @@ class User(Base):
         String(255), nullable=False, unique=True
     )
     username: Mapped[str] = mapped_column(
-        String(100), nullable=False, unique=True
+        String(100), nullable=False, unique=True, default=''
     )
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
     is_active: Mapped[bool] = mapped_column(nullable=False, default=True)

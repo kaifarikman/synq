@@ -12,6 +12,7 @@ repos:
           - dotenv
           - sqlalchemy
           - alembic
+          - pydantic-settings
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.15.5
