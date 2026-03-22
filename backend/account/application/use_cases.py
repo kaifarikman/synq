@@ -30,3 +30,17 @@ class AuthUseCases:
         )
         account = self.account_repository.save(account)
         return account
+
+    def login(self, email: str, password: str) -> dict:
+        user = self.account_repository.get_by_email(email)
+        if not user:
+            raise ValueError('Не существует аккаунта с таким email')
+        if not user.can_login:
+            raise ValueError('Аккаунт деактивирован')
+        if not self.password_service.check_password(
+            password, user.password_hash
+        ):
+            raise ValueError('Неверный пароль или email')
+        if user.id is None:
+            raise ValueError('у аккаунта нет id')
+        return self.auth_service.create_token_pair(user.id)

@@ -25,8 +25,15 @@ def get_auth_use_cases() -> AuthUseCases:
     )
 
 
-@auth.post('')
+@auth.post('/registry')
 async def registry(
     account: AccountSchema, auth: AuthUseCases = Depends(get_auth_use_cases)
 ) -> Account:
     return auth.resigtry(email=account.email, password=account.password)
+
+
+@auth.post('/login')
+async def login(
+    account: AccountSchema, auth: AuthUseCases = Depends(get_auth_use_cases)
+) -> dict:
+    return auth.login(account.email, account.password)
