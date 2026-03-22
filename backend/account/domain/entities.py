@@ -1,14 +1,15 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import Optional
 
 """Доменная модель внутри Authentication"""
 
 
 @dataclass
 class Account:
-    id: int
-    email: str
-    password_hash: str
-    is_active: bool
+    email: str = field()
+    password_hash: str = field()
+    is_active: bool = field(default=True)
+    id: Optional[int] = None
 
     @property
     def can_login(self) -> bool:
