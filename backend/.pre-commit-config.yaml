@@ -14,7 +14,6 @@ repos:
           - alembic
           - pydantic-settings
           - bcrypt
-          - PyJWT
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.15.5
