@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     db_port: int
     secret: str
     algorithm: str
+    base_url: str
 
     @property
     def database_url(self) -> str:
