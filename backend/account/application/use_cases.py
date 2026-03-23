@@ -1,5 +1,12 @@
 """Сценарии использования Authentication"""
 
+from account.application.exceptions import (
+    AccountAlreadyExist,
+    AccountHasNoId,
+    AccountIsDeactivate,
+    AccountNotFound,
+    InvalidPassword,
+)
 from account.domain.entities import Account
 from account.domain.repositories import (
     AccountRepository,
@@ -22,7 +29,7 @@ class AuthUseCases:
     def resigtry(self, email: str, password: str) -> Account:
         exist = self.account_repository.get_by_email(email)
         if exist:
-            raise ValueError('Аккаунт с таким email уже существует')
+            raise AccountAlreadyExist('Аккаунт с таким email уже существует')
         account = Account(
             email=email,
             password_hash=self.password_service.hash_password(password),
@@ -34,13 +41,13 @@ class AuthUseCases:
     def login(self, email: str, password: str) -> dict:
         user = self.account_repository.get_by_email(email)
         if not user:
-            raise ValueError('Не существует аккаунта с таким email')
+            raise AccountNotFound('Не существует аккаунта с таким email')
         if not user.can_login:
-            raise ValueError('Аккаунт деактивирован')
+            raise AccountIsDeactivate('Аккаунт деактивирован')
         if not self.password_service.check_password(
             password, user.password_hash
         ):
-            raise ValueError('Неверный пароль или email')
+            raise InvalidPassword('Неверный email или пароль')
         if user.id is None:
-            raise ValueError('у аккаунта нет id')
+            raise AccountHasNoId('У аккаунта нет id')
         return self.auth_service.create_token_pair(user.id)

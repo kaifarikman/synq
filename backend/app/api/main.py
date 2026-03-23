@@ -3,6 +3,7 @@
 from fastapi import FastAPI
 
 from app.api.auth_routes import auth
+from app.config import settings
 
 app = FastAPI(title='SYNQ')
-app.include_router(auth)
+app.include_router(auth, prefix=settings.base_url)
