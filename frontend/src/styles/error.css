@@ -1,0 +1,15 @@
+.error-message {
+  background: rgba(255, 0, 0, 0.1);
+  border: 1px solid #ff7675;
+  color: #d63031;
+  padding: 10px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
