@@ -15,6 +15,7 @@ dependencies = [
     "pydantic-settings>=2.13.1",
     "pydantic[email,mypy]>=2.12.5",
     "pyjwt>=2.12.1",
+    "redis>=7.4.0",
     "sqlalchemy>=2.0.48",
     "uvicorn>=0.42.0",
 ]

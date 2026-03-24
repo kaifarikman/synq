@@ -12,6 +12,7 @@ class SQLAlchemyAccountRepository:
         return Account(
             id=user.id,
             email=user.email,
+            username=user.username,
             password_hash=user.password_hash,
             is_active=user.is_active,
         )
@@ -32,11 +33,13 @@ class SQLAlchemyAccountRepository:
             user = session.get(UserModel, account.id)
             if user:
                 user.email = account.email
+                user.username = account.username
                 user.password_hash = account.password_hash
                 user.is_active = account.is_active
             else:
                 user = UserModel(
                     email=account.email,
+                    username=account.username,
                     password_hash=account.password_hash,
                     is_active=account.is_active,
                 )
