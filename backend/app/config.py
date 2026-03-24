@@ -11,6 +11,13 @@ class Settings(BaseSettings):
     secret: str
     algorithm: str
     base_url: str
+    email_login: str
+    email_password: str
+    smtp_host: str
+    smtp_port: int
+    code_expires_in: int
+    redis_host: str
+    redis_port: int
 
     @property
     def database_url(self) -> str:

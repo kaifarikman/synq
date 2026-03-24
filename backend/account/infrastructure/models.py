@@ -1,6 +1,6 @@
 """Отвечает за ORM-модель для базы данных"""
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
@@ -21,10 +21,12 @@ class UserModel(Base):
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
     is_active: Mapped[bool] = mapped_column(nullable=False, default=True)
     created_at: Mapped[datetime] = mapped_column(
-        nullable=False, default=datetime.utcnow
+        nullable=False, default=datetime.now(timezone.utc)
     )
     updated_at: Mapped[datetime] = mapped_column(
-        nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow
+        nullable=False,
+        default=datetime.now(timezone.utc),
+        onupdate=datetime.now(timezone.utc),
     )
     is_superuser: Mapped[bool] = mapped_column(nullable=False, default=False)
 

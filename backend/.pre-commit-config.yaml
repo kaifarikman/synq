@@ -15,6 +15,7 @@ repos:
           - pydantic-settings
           - bcrypt
           - PyJWT
+          - redis
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.15.5

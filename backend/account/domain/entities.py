@@ -7,6 +7,7 @@ from typing import Optional
 @dataclass
 class Account:
     email: str = field()
+    username: str = field()
     password_hash: str = field()
     is_active: bool = field(default=True)
     id: Optional[int] = None

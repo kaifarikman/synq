@@ -9,15 +9,16 @@ from account.application.exceptions import (
     InvalidPassword,
 )
 from account.application.use_cases import AuthUseCases
-from account.domain.entities import Account
 from account.infrastructure.services import (
     BcryptPasswordService,
     JWTAuthService,
+    RedisCacheService,
+    SMTPMailSender,
 )
 from account.infrastructure.sqlalchemy_repository import (
     SQLAlchemyAccountRepository,
 )
-from app.api.schemas import AccountSchema
+from app.api.schemas import AccountSchema, EmailConfirmation
 from app.config import settings
 
 auth = APIRouter(prefix='/auth', tags=['auth'])
@@ -28,18 +29,37 @@ def get_auth_use_cases() -> AuthUseCases:
         account_repository=SQLAlchemyAccountRepository(),
         password_service=BcryptPasswordService(),
         auth_service=JWTAuthService(settings.secret, settings.algorithm),
+        mail_sender=SMTPMailSender(),
+        cache_service=RedisCacheService(),
     )
 
 
 @auth.post('/registry')
 async def registry(
     account: AccountSchema, auth: AuthUseCases = Depends(get_auth_use_cases)
-) -> Account:
+) -> bool:
     try:
-        res_account = auth.resigtry(
-            email=account.email, password=account.password
+        return auth.register(
+            email=account.email,
+            username=account.username,
+            password=account.password,
         )
-        return res_account
+    except AccountAlreadyExist as err:
+        raise HTTPException(status_code=409, detail=str(err)) from err
+
+
+@auth.post('/confirm_email')
+async def confirm_email(
+    attempt: EmailConfirmation,
+    auth: AuthUseCases = Depends(get_auth_use_cases),
+) -> bool:
+    try:
+        res = auth.mail_confirmation(attempt.email, attempt.code)
+        if not res:
+            raise HTTPException(
+                status_code=400, detail='Неверный код подтверждения'
+            )
+        return res
     except AccountAlreadyExist as err:
         raise HTTPException(status_code=409, detail=str(err)) from err
 
