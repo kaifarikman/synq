@@ -1,11 +1,15 @@
 """Отвечает за ORM-модель для базы данных"""
 
 from datetime import datetime, timezone
+from typing import TYPE_CHECKING
 
 from sqlalchemy import String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db import Base
+
+if TYPE_CHECKING:
+    from profile.infrastructure.models import ProfileModel
 
 
 class UserModel(Base):
@@ -30,6 +34,6 @@ class UserModel(Base):
     )
     is_superuser: Mapped[bool] = mapped_column(nullable=False, default=False)
 
-    # profile: Mapped[Any] = relationship(
-    #     'Profile', back_populates='user', uselist=False
-    # )
+    profile: Mapped['ProfileModel'] = relationship(
+        'ProfileModel', back_populates='user', uselist=False
+    )
