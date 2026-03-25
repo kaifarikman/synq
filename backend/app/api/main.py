@@ -2,6 +2,7 @@
 
 from fastapi import FastAPI
 
+import app.db_registry
 from app.api.auth_routes import auth
 from app.config import settings
 
