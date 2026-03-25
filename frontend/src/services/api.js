@@ -4,19 +4,20 @@ let registeredUser = null;
 export const authAPI = {
   register: async (userData) => {
     console.log('Registration request:', userData);
-
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     if (!userData.username || !userData.email || !userData.password) {
       return {
         success: false,
-        detail: 'Заполните все поля'
+        status: 400,
+        detail: 'Невалидные входные данные'
       };
     }
 
     if (!userData.email.includes('@')) {
       return {
         success: false,
+        status: 400,
         detail: 'Введите корректный email'
       };
     }
@@ -24,6 +25,7 @@ export const authAPI = {
     if (userData.password.length < 6) {
       return {
         success: false,
+        status: 400,
         detail: 'Пароль должен содержать минимум 6 символов'
       };
     }
@@ -31,65 +33,116 @@ export const authAPI = {
     if (userData.username.length < 3) {
       return {
         success: false,
+        status: 400,
         detail: 'Имя пользователя должно содержать минимум 3 символа'
       };
     }
 
-    registeredUser = {
+    if (registeredUser && registeredUser.email === userData.email) {
+      return {
+        success: false,
+        status: 409,
+        detail: 'Пользователь с таким email уже существует'
+      };
+    }
+
+    if (registeredUser && registeredUser.username === userData.username) {
+      return {
+        success: false,
+        status: 409,
+        detail: 'Пользователь с таким именем уже существует'
+      };
+    }
+
+    const newUser = {
+      id: Math.floor(Math.random() * 1000),
       email: userData.email,
-      password: userData.password,
       username: userData.username,
+      password: userData.password,
       profile: {
         id: Math.floor(Math.random() * 1000),
         uuid: crypto.randomUUID()
       }
     };
 
+    registeredUser = newUser;
+
     return {
       success: true,
-      user: {
-        id: Math.floor(Math.random() * 1000),
-        email: userData.email,
-        username: userData.username
-      },
-      profile: registeredUser.profile
+      status: 201,
+      data: {
+        user: {
+          id: newUser.id,
+          email: newUser.email,
+          username: newUser.username
+        },
+        profile: newUser.profile
+      }
     };
   },
 
-  // Вход
   login: async (email, password) => {
     console.log('Login request:', { email, password });
-
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     if (!email || !password) {
       return {
         success: false,
-        detail: 'Заполните все поля'
+        status: 400,
+        detail: 'Невалидный формат запроса'
       };
     }
 
-    if (registeredUser && registeredUser.email === email && registeredUser.password === password) {
-      const accessToken = 'mock-jwt-token-' + Date.now();
-      localStorage.setItem('accessToken', accessToken);
+    if (!registeredUser) {
       return {
-        success: true,
-        accessToken: accessToken,
-        tokenType: 'Bearer'
+        success: false,
+        status: 401,
+        detail: 'Неверный email или пароль'
       };
     }
+
+    if (registeredUser.email !== email || registeredUser.password !== password) {
+      return {
+        success: false,
+        status: 401,
+        detail: 'Неверный email или пароль'
+      };
+    }
+
+    const accessToken = 'mock-jwt-token-' + Date.now();
+    localStorage.setItem('accessToken', accessToken);
 
     return {
-      success: false,
-      detail: 'Неверный email или пароль'
+      success: true,
+      status: 200,
+      data: {
+        accessToken: accessToken,
+        tokenType: 'Bearer'
+      }
     };
   },
 
   logout: async () => {
     console.log('Logout request');
     await new Promise(resolve => setTimeout(resolve, 500));
+
+    const token = localStorage.getItem('accessToken');
+
+    if (!token) {
+      return {
+        success: false,
+        status: 401,
+        detail: 'Токен отсутствует или недействителен'
+      };
+    }
+
     localStorage.removeItem('accessToken');
-    return { success: true };
+
+    return {
+      success: true,
+      status: 204,
+      data: null
+    };
   },
 
   getCurrentUser: async () => {
@@ -97,19 +150,32 @@ export const authAPI = {
     await new Promise(resolve => setTimeout(resolve, 500));
 
     const token = localStorage.getItem('accessToken');
-    if (!token || !registeredUser) {
+
+    if (!token) {
       return {
         success: false,
-        detail: 'Unauthorized'
+        status: 401,
+        detail: 'Токен отсутствует или недействителен'
+      };
+    }
+
+    if (!registeredUser) {
+      return {
+        success: false,
+        status: 401,
+        detail: 'Пользователь не найден'
       };
     }
 
     return {
       success: true,
-      id: 1,
-      email: registeredUser.email,
-      username: registeredUser.username,
-      profile: registeredUser.profile
+      status: 200,
+      data: {
+        id: registeredUser.id,
+        email: registeredUser.email,
+        username: registeredUser.username,
+        profile: registeredUser.profile
+      }
     };
   }
 };
