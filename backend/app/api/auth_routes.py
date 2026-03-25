@@ -18,7 +18,7 @@ from account.infrastructure.services import (
 from account.infrastructure.sqlalchemy_repository import (
     SQLAlchemyAccountRepository,
 )
-from app.api.schemas import AccountSchema, EmailConfirmation
+from app.api.schemas import AccountRegisterSchema, AccountLoginSchema, EmailConfirmation
 from app.config import settings
 
 auth = APIRouter(prefix='/auth', tags=['auth'])
@@ -36,7 +36,7 @@ def get_auth_use_cases() -> AuthUseCases:
 
 @auth.post('/registry')
 async def registry(
-    account: AccountSchema, auth: AuthUseCases = Depends(get_auth_use_cases)
+        account: AccountRegisterSchema, auth: AuthUseCases = Depends(get_auth_use_cases)
 ) -> bool:
     try:
         return auth.register(
@@ -50,8 +50,8 @@ async def registry(
 
 @auth.post('/confirm_email')
 async def confirm_email(
-    attempt: EmailConfirmation,
-    auth: AuthUseCases = Depends(get_auth_use_cases),
+        attempt: EmailConfirmation,
+        auth: AuthUseCases = Depends(get_auth_use_cases),
 ) -> bool:
     try:
         res = auth.mail_confirmation(attempt.email, attempt.code)
@@ -66,7 +66,7 @@ async def confirm_email(
 
 @auth.post('/login')
 async def login(
-    account: AccountSchema, auth: AuthUseCases = Depends(get_auth_use_cases)
+        account: AccountLoginSchema, auth: AuthUseCases = Depends(get_auth_use_cases)
 ) -> dict:
     try:
         return auth.login(account.email, account.password)
