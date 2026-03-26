@@ -1,5 +1,6 @@
-from profile.domain.entities import Profile
 from typing import Protocol
+
+from profile.domain.entities import Profile
 
 
 class ProfileRepository(Protocol):

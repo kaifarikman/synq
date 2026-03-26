@@ -1,5 +1,5 @@
 from logging.config import fileConfig
-from profile.infrastructure.models import ProfileModel
+from profile.infrastructure.persistence.models import ProfileModel
 
 from alembic import context
 from sqlalchemy import engine_from_config, pool

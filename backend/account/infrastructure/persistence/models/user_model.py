@@ -9,7 +9,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db import Base
 
 if TYPE_CHECKING:
-    from profile.infrastructure.models import ProfileModel
+    from profile.infrastructure.persistence.models import ProfileModel
 
 
 class UserModel(Base):
