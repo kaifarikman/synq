@@ -1,0 +1,13 @@
+from typing import Protocol, Self
+
+from account.domain.ports.account_repository import AccountRepository
+
+
+class UnitOfWork(Protocol):
+    accounts: AccountRepository
+
+    def __enter__(self) -> Self: ...
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None: ...
+
+    def commit(self) -> None: ...
+    def rollback(self) -> None: ...
