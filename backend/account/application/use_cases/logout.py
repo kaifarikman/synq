@@ -1,4 +1,4 @@
-from account.application.interfaces import AuthService
+from account.application.interfaces.auth_service import AuthService
 
 
 def logout(auth_service: AuthService, access_token: str) -> None:

@@ -1,7 +1,12 @@
 import random
 
-from account.application.exceptions import AccountAlreadyExist, UsernameAlreadyExist
-from account.application.interfaces import CacheService, MailSender, PasswordService
+from account.application.exceptions import (
+    AccountAlreadyExist,
+    UsernameAlreadyExist,
+)
+from account.application.interfaces.cache_service import CacheService
+from account.application.interfaces.mail_sender import MailSender
+from account.application.interfaces.password_service import PasswordService
 from account.application.interfaces.uow import UnitOfWork
 from account.domain.entities import Account
 
@@ -20,9 +25,11 @@ def register(
         exist_by_username = uow.accounts.get_by_username(username)
 
         if exist_by_email:
-            raise AccountAlreadyExist("Аккаунт с таким email уже существует")
+            raise AccountAlreadyExist('Аккаунт с таким email уже существует')
         if exist_by_username:
-            raise UsernameAlreadyExist("Аккаунт с таким username уже существует")
+            raise UsernameAlreadyExist(
+                'Аккаунт с таким username уже существует'
+            )
 
         code = random.randint(100000, 999999)
         password_hash = password_service.hash_password(password)

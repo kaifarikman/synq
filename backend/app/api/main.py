@@ -3,7 +3,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-import app.db_registry
 from app.api.auth_routes import auth
 from app.api.profile_routes import profile
 from app.config import settings
@@ -14,6 +13,7 @@ app.add_middleware(
     allow_origins=[
         'http://127.0.0.1:5173',
         'http://localhost:5173',
+        'http://localhost:8000'
     ],
     allow_credentials=True,
     allow_methods=['*'],

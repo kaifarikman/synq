@@ -25,7 +25,11 @@ class SQLAlchemyAccountRepository:
         return AccountMapper.to_domain(user) if user else None
 
     def save(self, account: Account) -> Account:
-        user = self.session.get(UserModel, account.id) if account.id is not None else None
+        user = (
+            self.session.get(UserModel, account.id)
+            if account.id is not None
+            else None
+        )
 
         if user:
             user.email = account.email

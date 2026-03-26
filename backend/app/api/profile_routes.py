@@ -1,26 +1,20 @@
 """Ручки FastAPI приложения в контексте Profile"""
 
+from profile.application.exceptions import ProfileNotFound
+from profile.application.use_cases import ProfileUseCases
+
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from account.application.exceptions import AccountNotFound
 from account.application.use_cases import AuthUseCases
-from app.api.dependencies import get_bearer_token
-from app.api.schemas import ProfileResponse, UpdateProfileSchema
-from profile.application.exceptions import ProfileNotFound
-from profile.application.use_cases import ProfileUseCases
-from profile.infrastructure.persistence.repositories import (
-    SQLAlchemyProfileRepository,
+from app.api.dependencies import (
+    get_auth_use_cases,
+    get_bearer_token,
+    get_profile_use_cases,
 )
-
-from .auth_routes import get_auth_use_cases
+from app.api.schemas import ProfileResponse, UpdateProfileSchema
 
 profile = APIRouter(prefix='/profile', tags=['profile'])
-
-
-def get_profile_use_cases() -> ProfileUseCases:
-    return ProfileUseCases(
-        profile_repository=SQLAlchemyProfileRepository(),
-    )
 
 
 @profile.get('/me', response_model=ProfileResponse)

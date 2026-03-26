@@ -1,13 +1,11 @@
 """Сценарии использования Authentication"""
 
-from account.application.read_models import CurrentUserReadModel
-from account.application.interfaces import (
-    AuthService,
-    CacheService,
-    MailSender,
-    PasswordService,
-)
+from account.application.interfaces.auth_service import AuthService
+from account.application.interfaces.cache_service import CacheService
+from account.application.interfaces.mail_sender import MailSender
+from account.application.interfaces.password_service import PasswordService
 from account.application.interfaces.uow import UnitOfWork
+from account.application.read_models import CurrentUserReadModel
 
 from .confirm_email import confirm_email
 from .get_current_user import get_current_user

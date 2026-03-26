@@ -1,1 +1,1 @@
-from .profile_mapper import ProfileMapper
+from .profile_mapper import ProfileMapper  # noqa: F401

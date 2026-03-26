@@ -7,24 +7,24 @@ from account.application.exceptions import (
     AccountIsDeactivate,
     AccountNotFound,
     InvalidPassword,
-    UsernameAlreadyExist
+    UsernameAlreadyExist,
 )
 from account.application.use_cases import AuthUseCases
-
-from app.api.dependencies import get_bearer_token
+from app.api.dependencies import get_auth_use_cases, get_bearer_token
 from app.api.schemas import (
     AccountLoginSchema,
     AccountRegisterSchema,
     EmailConfirmation,
     UserResponse,
 )
-from app.api.dependencies import get_auth_use_cases
 
 auth = APIRouter(prefix='/auth', tags=['auth'])
 
+
 @auth.post('/registry')
 async def registry(
-        account: AccountRegisterSchema, auth: AuthUseCases = Depends(get_auth_use_cases)
+    account: AccountRegisterSchema,
+    auth: AuthUseCases = Depends(get_auth_use_cases),
 ) -> bool:
     try:
         return auth.register(
@@ -40,8 +40,8 @@ async def registry(
 
 @auth.post('/confirm_email')
 async def confirm_email(
-        attempt: EmailConfirmation,
-        auth: AuthUseCases = Depends(get_auth_use_cases),
+    attempt: EmailConfirmation,
+    auth: AuthUseCases = Depends(get_auth_use_cases),
 ) -> bool:
     try:
         res = auth.mail_confirmation(attempt.email, attempt.code)
@@ -56,7 +56,8 @@ async def confirm_email(
 
 @auth.post('/login')
 async def login(
-        account: AccountLoginSchema, auth: AuthUseCases = Depends(get_auth_use_cases)
+    account: AccountLoginSchema,
+    auth: AuthUseCases = Depends(get_auth_use_cases),
 ) -> dict:
     try:
         return auth.login(account.email, account.password)
@@ -70,8 +71,8 @@ async def login(
 
 @auth.get('/me', response_model=UserResponse)
 async def me(
-        token: str = Depends(get_bearer_token),
-        auth: AuthUseCases = Depends(get_auth_use_cases),
+    token: str = Depends(get_bearer_token),
+    auth: AuthUseCases = Depends(get_auth_use_cases),
 ) -> UserResponse:
     try:
         user = auth.get_current_user(token)
@@ -89,8 +90,8 @@ async def me(
 
 @auth.post('/logout', status_code=status.HTTP_204_NO_CONTENT)
 async def logout(
-        token: str = Depends(get_bearer_token),
-        auth: AuthUseCases = Depends(get_auth_use_cases),
+    token: str = Depends(get_bearer_token),
+    auth: AuthUseCases = Depends(get_auth_use_cases),
 ) -> Response:
     try:
         auth.logout(token)
