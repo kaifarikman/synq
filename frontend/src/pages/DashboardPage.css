@@ -1,0 +1,174 @@
+
+.profile-page-clean {
+  min-height: 100vh;
+  padding: 40px 20px;
+  font-family: 'Montserrat', sans-serif;
+  background:
+    radial-gradient(circle at 15% 25%, rgba(135, 206, 250, 0.4) 0%, transparent 40%),
+    radial-gradient(circle at 85% 75%, rgba(173, 216, 230, 0.4) 0%, transparent 40%),
+    #ffffff;
+  display: flex;
+  justify-content: center;
+}
+
+.profile-grid-clean {
+  display: grid;
+  grid-template-columns: 280px 1fr 280px;
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+}
+
+.btn-red {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #ff7675, #d63031); /* Градиент красного */
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  box-shadow: 0 4px 15px rgba(214, 48, 49, 0.2);
+  margin-top: 15px; /* Отступ */
+}
+
+.btn-red:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+  box-shadow: 0 6px 20px rgba(214, 48, 49, 0.3);
+}
+
+.btn-light {
+  width: 100%;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  font-family: 'Montserrat', sans-serif;
+  transition: 0.3s;
+}
+
+.btn-light:hover {
+  background: #fff;
+}
+
+.btn-outline-blue {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: 1px dashed #0984e3;
+  color: #0984e3;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.progress-bar-container {
+  height: 12px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ffeaa7, #fdcb6e); /* Градиент заполнения */
+  transition: width 0.5s ease-out; /* Плавная анимация изменения */
+}
+
+.avatar-placeholder-lg {
+  width: 80px;
+  height: 80px;
+  background: white;
+  border-radius: 50%;
+  margin: 0 auto;
+}
+
+.avatar-placeholder-sm {
+  width: 48px;
+  height: 48px;
+  background: white;
+  border-radius: 50%;
+}
+
+.team-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: rgba(255, 255, 255, 0.3);
+  padding: 12px;
+  border-radius: 16px;
+  margin-bottom: 12px;
+}
+
+.team-data {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.team-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  opacity: 0.6;
+}
+
+.icon-btn:hover {
+  opacity: 1;
+}
+
+.card-divider {
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  margin: 20px 0;
+}
+
+.add-icon {
+  color: #0984e3;
+  font-weight: bold;
+  cursor: pointer;
+}
+.add-icon {
+  color: #0984e3;
+  font-weight: bold;
+  cursor: pointer; /* Делает курсор "пальчиком" */
+  padding: 0 5px;
+  transition: transform 0.2s ease, color 0.2s ease;
+  display: inline-block;
+}
+
+.add-icon:hover {
+  color: #d63031; /* Цвет меняется на красный при наведении (или любой другой) */
+  transform: scale(1.3); /* Плюсик немного увеличивается */
+}
