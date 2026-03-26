@@ -1,7 +1,7 @@
 """Сценарии использования Authentication"""
 
 from account.application.read_models import CurrentUserReadModel
-from account.domain.ports import (
+from account.application.interfaces import (
     AccountRepository,
     AuthService,
     CacheService,

@@ -4,7 +4,7 @@ from account.application.exceptions import (
     AccountNotFound,
     InvalidPassword,
 )
-from account.domain.ports import (
+from account.application.interfaces import (
     AccountRepository,
     AuthService,
     PasswordService,

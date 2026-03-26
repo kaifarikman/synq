@@ -1,6 +1,6 @@
 from account.application.exceptions import AccountNotFound
 from account.application.read_models import CurrentUserReadModel
-from account.domain.ports import AccountRepository, AuthService
+from account.application.interfaces import AccountRepository, AuthService
 
 
 def get_current_user(

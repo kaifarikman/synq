@@ -7,17 +7,10 @@ from account.application.exceptions import (
     AccountIsDeactivate,
     AccountNotFound,
     InvalidPassword,
+    UsernameAlreadyExist
 )
 from account.application.use_cases import AuthUseCases
-from account.infrastructure.auth import JWTAuthService
-from account.infrastructure.cache import RedisCacheService
-from account.infrastructure.notifications import SMTPMailSender
-from account.infrastructure.persistence.repositories import (
-    SQLAlchemyAccountRepository,
-)
-from account.infrastructure.security import (
-    BcryptPasswordService,
-)
+
 from app.api.dependencies import get_bearer_token
 from app.api.schemas import (
     AccountLoginSchema,
@@ -25,24 +18,9 @@ from app.api.schemas import (
     EmailConfirmation,
     UserResponse,
 )
-from app.config import settings
-from profile.infrastructure.persistence.repositories import (
-    SQLAlchemyProfileRepository,
-)
+from app.api.dependencies import get_auth_use_cases
 
 auth = APIRouter(prefix='/auth', tags=['auth'])
-
-
-def get_auth_use_cases() -> AuthUseCases:
-    return AuthUseCases(
-        account_repository=SQLAlchemyAccountRepository(),
-        password_service=BcryptPasswordService(),
-        auth_service=JWTAuthService(settings.secret, settings.algorithm),
-        mail_sender=SMTPMailSender(),
-        cache_service=RedisCacheService(),
-        profile_repository=SQLAlchemyProfileRepository(),
-    )
-
 
 @auth.post('/registry')
 async def registry(
@@ -55,6 +33,8 @@ async def registry(
             password=account.password,
         )
     except AccountAlreadyExist as err:
+        raise HTTPException(status_code=409, detail=str(err)) from err
+    except UsernameAlreadyExist as err:
         raise HTTPException(status_code=409, detail=str(err)) from err
 
 

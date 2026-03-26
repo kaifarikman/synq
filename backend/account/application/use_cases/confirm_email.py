@@ -3,9 +3,9 @@ from account.application.exceptions import (
     AccountHasNoId,
 )
 from account.domain.entities import Account
-from account.domain.ports import AccountRepository, CacheService
+from account.application.interfaces import AccountRepository, CacheService
 from profile.application.use_cases import create_profile
-from profile.domain.ports import ProfileRepository
+from account.application.interfaces import ProfileRepository
 
 
 def confirm_email(

@@ -19,6 +19,12 @@ class SQLAlchemyAccountRepository:
             query = select(UserModel).where(UserModel.email == email)
             user = session.scalar(query)
             return AccountMapper.to_domain(user) if user else None
+        
+    def get_by_username(self, username: str) -> Optional[Account]:
+        with Session() as session:
+            query = query = select(UserModel).where(UserModel.username == username)
+            user = session.scalar(query)
+            return AccountMapper.to_domain(user) if user else None
 
     def save(self, account: Account) -> Account:
         with Session() as session:

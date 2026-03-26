@@ -1,13 +1,13 @@
 import random
 
-from account.application.exceptions import AccountAlreadyExist
+from account.application.exceptions import AccountAlreadyExist, UsernameAlreadyExist
 from account.domain.entities import Account
-from account.domain.ports import (
-    AccountRepository,
+from account.application.interfaces import (
     CacheService,
     MailSender,
     PasswordService,
 )
+from account.domain.ports.account_repository import AccountRepository
 
 
 def register(
@@ -19,9 +19,12 @@ def register(
     username: str,
     password: str,
 ) -> bool:
-    exist = account_repository.get_by_email(email)
-    if exist:
+    exist_by_email = account_repository.get_by_email(email)
+    exist_by_username = account_repository.get_by_username(username)
+    if exist_by_email:
         raise AccountAlreadyExist('Аккаунт с таким email уже существует')
+    if exist_by_username:
+        raise UsernameAlreadyExist('Аккаунт с таким username уже существует')
     code = random.randint(100000, 999999)
     password_hash = password_service.hash_password(password)
     account = Account(
