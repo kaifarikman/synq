@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from pydantic import BaseModel, EmailStr
 
 
@@ -15,3 +17,22 @@ class AccountLoginSchema(BaseModel):
 class EmailConfirmation(BaseModel):
     email: str
     code: int
+
+
+class UserResponse(BaseModel):
+    id: int
+    email: EmailStr
+    username: str
+
+
+class ProfileResponse(BaseModel):
+    id: int
+    user_id: int
+    uuid: UUID
+    full_name: str | None
+    bio: str | None
+
+
+class UpdateProfileSchema(BaseModel):
+    full_name: str | None = None
+    bio: str | None = None
