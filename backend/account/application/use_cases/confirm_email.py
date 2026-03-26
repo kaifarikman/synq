@@ -1,11 +1,17 @@
-from account.application.exceptions import AccountAlreadyExist
+from account.application.exceptions import (
+    AccountAlreadyExist,
+    AccountHasNoId,
+)
 from account.domain.entities import Account
 from account.domain.ports import AccountRepository, CacheService
+from profile.application.use_cases import create_profile
+from profile.domain.ports import ProfileRepository
 
 
 def confirm_email(
     account_repository: AccountRepository,
     cache_service: CacheService,
+    profile_repository: ProfileRepository,
     email: str,
     enter_code: int,
 ) -> bool:
@@ -24,5 +30,12 @@ def confirm_email(
         password_hash=info['password_hash'],
         is_active=True,
     )
-    account_repository.save(account)
+    account = account_repository.save(account)
+    if account.id is None:
+        raise AccountHasNoId('У аккаунта нет id')
+
+    create_profile(
+        profile_repository=profile_repository,
+        user_id=account.id,
+    )
     return cache_service.delete_by_email(email)
