@@ -9,16 +9,16 @@ from account.application.exceptions import (
     InvalidPassword,
 )
 from account.application.use_cases import AuthUseCases
-from account.infrastructure.services import (
-    BcryptPasswordService,
-    JWTAuthService,
-    RedisCacheService,
-    SMTPMailSender,
-)
-from account.infrastructure.sqlalchemy_repository import (
+from account.infrastructure.auth import JWTAuthService
+from account.infrastructure.cache import RedisCacheService
+from account.infrastructure.notifications import SMTPMailSender
+from account.infrastructure.persistence.repositories import (
     SQLAlchemyAccountRepository,
 )
-from app.api.schemas import AccountSchema, EmailConfirmation
+from account.infrastructure.security import (
+    BcryptPasswordService,
+)
+from app.api.schemas import AccountRegisterSchema, AccountLoginSchema, EmailConfirmation
 from app.config import settings
 
 auth = APIRouter(prefix='/auth', tags=['auth'])
@@ -36,7 +36,7 @@ def get_auth_use_cases() -> AuthUseCases:
 
 @auth.post('/registry')
 async def registry(
-    account: AccountSchema, auth: AuthUseCases = Depends(get_auth_use_cases)
+        account: AccountRegisterSchema, auth: AuthUseCases = Depends(get_auth_use_cases)
 ) -> bool:
     try:
         return auth.register(
@@ -50,8 +50,8 @@ async def registry(
 
 @auth.post('/confirm_email')
 async def confirm_email(
-    attempt: EmailConfirmation,
-    auth: AuthUseCases = Depends(get_auth_use_cases),
+        attempt: EmailConfirmation,
+        auth: AuthUseCases = Depends(get_auth_use_cases),
 ) -> bool:
     try:
         res = auth.mail_confirmation(attempt.email, attempt.code)
@@ -66,7 +66,7 @@ async def confirm_email(
 
 @auth.post('/login')
 async def login(
-    account: AccountSchema, auth: AuthUseCases = Depends(get_auth_use_cases)
+        account: AccountLoginSchema, auth: AuthUseCases = Depends(get_auth_use_cases)
 ) -> dict:
     try:
         return auth.login(account.email, account.password)

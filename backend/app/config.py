@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     db_port: int
     secret: str
     algorithm: str
-    base_url: str
+    api_prefix: str = '/api/v1'
     email_login: str
     email_password: str
     smtp_host: str
@@ -30,4 +30,4 @@ class Settings(BaseSettings):
         env_file = '.env'
 
 
-settings = Settings()  # type: ignore[call-arg]
+settings = Settings()

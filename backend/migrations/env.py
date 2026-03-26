@@ -1,10 +1,11 @@
 from logging.config import fileConfig
-from profile.infrastructure.models import ProfileModel  # noqa: F401
+from profile.infrastructure.persistence.models import ProfileModel
 
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-from account.infrastructure.models import UserModel  # noqa: F401
+import app.db_registry
+from account.infrastructure.persistence.models import UserModel
 from app.config import settings
 from app.db import Base
 
