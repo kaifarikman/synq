@@ -9,7 +9,6 @@ from account.domain.ports import (
     PasswordService,
 )
 from profile.domain.ports import ProfileRepository
-
 from .confirm_email import confirm_email
 from .get_current_user import get_current_user
 from .login import login
