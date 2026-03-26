@@ -7,4 +7,4 @@ from app.api.auth_routes import auth
 from app.config import settings
 
 app = FastAPI(title='SYNQ')
-app.include_router(auth, prefix=settings.base_url)
+app.include_router(auth, prefix=settings.api_prefix)
