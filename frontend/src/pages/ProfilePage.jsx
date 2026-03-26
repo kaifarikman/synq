@@ -9,8 +9,14 @@ export default function ProfilePage() {
   const navigate = useNavigate();
   const { logout } = useAuth();
   const [profile, setProfile] = useState(null);
+  const [form, setForm] = useState({
+    full_name: '',
+    bio: '',
+  });
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   useEffect(() => {
     let active = true;
@@ -24,6 +30,10 @@ export default function ProfilePage() {
 
       if (response.success) {
         setProfile(response.data);
+        setForm({
+          full_name: response.data.full_name || '',
+          bio: response.data.bio || '',
+        });
         setLoading(false);
         return;
       }
@@ -45,6 +55,46 @@ export default function ProfilePage() {
     };
   }, [logout, navigate]);
 
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setForm((currentForm) => ({
+      ...currentForm,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError('');
+    setSuccess('');
+    setSaving(true);
+
+    const response = await profileAPI.updateMyProfile({
+      full_name: form.full_name || null,
+      bio: form.bio || null,
+    });
+
+    if (response.success) {
+      setProfile(response.data);
+      setForm({
+        full_name: response.data.full_name || '',
+        bio: response.data.bio || '',
+      });
+      setSuccess('Профиль сохранён');
+      setSaving(false);
+      return;
+    }
+
+    if (response.status === 401) {
+      await logout();
+      navigate('/', { replace: true });
+      return;
+    }
+
+    setError(response.detail || 'Не удалось сохранить профиль');
+    setSaving(false);
+  };
+
   if (loading) {
     return <div>Загрузка профиля...</div>;
   }
@@ -53,21 +103,22 @@ export default function ProfilePage() {
     <div className="form-card">
       <h1 className="form-title">Мой профиль</h1>
       {error && <div className="error-message">{error}</div>}
+      {success && <div className="form-footer">{success}</div>}
       {profile && (
-        <form>
+        <form onSubmit={handleSubmit}>
           <Input
             name="full_name"
             type="text"
             placeholder="Полное имя"
-            value={profile.full_name || ''}
-            readOnly
+            value={form.full_name}
+            onChange={handleChange}
           />
           <Input
             name="bio"
             type="text"
             placeholder="О себе"
-            value={profile.bio || ''}
-            readOnly
+            value={form.bio}
+            onChange={handleChange}
           />
           <Input
             name="uuid"
@@ -76,6 +127,9 @@ export default function ProfilePage() {
             value={profile.uuid}
             readOnly
           />
+          <Button disabled={saving}>
+            {saving ? 'Сохранение...' : 'Сохранить'}
+          </Button>
         </form>
       )}
       <Button type="button" onClick={() => navigate('/dashboard')}>

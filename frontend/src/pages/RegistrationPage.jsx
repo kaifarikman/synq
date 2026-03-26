@@ -26,6 +26,7 @@ export default function RegistrationPage() {
     try {
       const result = await register(userData);
       if (result.success) {
+        sessionStorage.setItem('pendingRegistrationEmail', userData.email);
         navigate('/verify', {
           state: { email: userData.email },
         });
