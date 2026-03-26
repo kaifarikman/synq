@@ -26,11 +26,13 @@ export default function RegistrationPage() {
     try {
       const result = await register(userData);
       if (result.success) {
-        navigate('/verify');
+        navigate('/verify', {
+          state: { email: userData.email },
+        });
       } else {
-        setError(result.message || 'Ошибка регистрации');
+        setError(result.detail || 'Ошибка регистрации');
       }
-    } catch (err) {
+    } catch {
       setError('Ошибка подключения к серверу');
     } finally {
       setLoading(false);

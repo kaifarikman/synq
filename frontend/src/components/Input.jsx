@@ -1,4 +1,14 @@
-export default function Input({ name, type, placeholder, required, style, maxLength }) {
+export default function Input({
+  name,
+  type,
+  placeholder,
+  required,
+  style,
+  maxLength,
+  value,
+  onChange,
+  readOnly = false
+}) {
   return (
     <input
       name={name}
@@ -7,6 +17,9 @@ export default function Input({ name, type, placeholder, required, style, maxLen
       required={required}
       style={style}
       maxLength={maxLength}
+      value={value}
+      onChange={onChange}
+      readOnly={readOnly}
       className="input-field"
     />
   );
