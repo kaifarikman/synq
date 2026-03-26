@@ -4,10 +4,11 @@ import Button from '../components/Button';
 import Input from '../components/Input';
 import { useAuth } from '../hooks/useAuth';
 import { profileAPI } from '../services/profileApi';
+import './ProfilePage.css';
 
 export default function ProfilePage() {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const [profile, setProfile] = useState(null);
   const [form, setForm] = useState({
     full_name: '',
@@ -100,41 +101,94 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="form-card">
-      <h1 className="form-title">Мой профиль</h1>
-      {error && <div className="error-message">{error}</div>}
-      {success && <div className="form-footer">{success}</div>}
-      {profile && (
+    <div className="profile-edit-container">
+      <div className="glass-card edit-card">
+        <div className="edit-header">
+          <div className="avatar-upload-section">
+            <div className="avatar-circle-large">
+              <span>Фото профиля</span>
+            </div>
+          </div>
+
+          <div className="main-info-grid">
+            <div className="input-group-row">
+              <label>Имя:</label>
+              <input
+                name="full_name"
+                type="text"
+                placeholder="Данные"
+                className="blue-input"
+                value={form.full_name}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="input-group-row">
+              <label>Почта:</label>
+              <input
+                type="email"
+                placeholder="Данные"
+                className="blue-input"
+                value={user?.email || ''}
+                readOnly
+              />
+            </div>
+            <div className="input-group-row">
+              <label>UUID:</label>
+              <input
+                type="text"
+                placeholder="UUID"
+                className="blue-input"
+                value={profile?.uuid || ''}
+                readOnly
+              />
+            </div>
+            <div className="input-group-row">
+              <label>User ID:</label>
+              <input
+                type="text"
+                placeholder="ID"
+                className="blue-input"
+                value={String(profile?.user_id || '')}
+                readOnly
+              />
+            </div>
+          </div>
+        </div>
+
+        <hr className="edit-divider" />
+
         <form onSubmit={handleSubmit}>
-          <Input
-            name="full_name"
-            type="text"
-            placeholder="Полное имя"
-            value={form.full_name}
-            onChange={handleChange}
-          />
-          <Input
-            name="bio"
-            type="text"
-            placeholder="О себе"
-            value={form.bio}
-            onChange={handleChange}
-          />
-          <Input
-            name="uuid"
-            type="text"
-            placeholder="UUID"
-            value={profile.uuid}
-            readOnly
-          />
-          <Button disabled={saving}>
-            {saving ? 'Сохранение...' : 'Сохранить'}
-          </Button>
+          {error && <div className="error-message">{error}</div>}
+          {success && <div className="form-footer">{success}</div>}
+
+          <div className="additional-info-section">
+            <h3 className="section-title">Дополнительная информация</h3>
+            <div className="full-width-field">
+              <label>О себе:</label>
+              <textarea
+                name="bio"
+                rows="4"
+                className="standard-input"
+                value={form.bio}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+
+          <div className="edit-footer-actions">
+            <button
+              type="button"
+              className="btn-cancel-text"
+              onClick={() => navigate('/dashboard')}
+            >
+              Отмена
+            </button>
+            <button type="submit" className="btn-save-main" disabled={saving}>
+              {saving ? 'Сохранение...' : 'Сохранить'}
+            </button>
+          </div>
         </form>
-      )}
-      <Button type="button" onClick={() => navigate('/dashboard')}>
-        Назад
-      </Button>
+      </div>
     </div>
   );
 }
