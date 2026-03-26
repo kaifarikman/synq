@@ -7,46 +7,24 @@ from account.application.exceptions import (
     AccountIsDeactivate,
     AccountNotFound,
     InvalidPassword,
+    UsernameAlreadyExist,
 )
 from account.application.use_cases import AuthUseCases
-from account.infrastructure.auth import JWTAuthService
-from account.infrastructure.cache import RedisCacheService
-from account.infrastructure.notifications import SMTPMailSender
-from account.infrastructure.persistence.repositories import (
-    SQLAlchemyAccountRepository,
-)
-from account.infrastructure.security import (
-    BcryptPasswordService,
-)
-from app.api.dependencies import get_bearer_token
+from app.api.dependencies import get_auth_use_cases, get_bearer_token
 from app.api.schemas import (
     AccountLoginSchema,
     AccountRegisterSchema,
     EmailConfirmation,
     UserResponse,
 )
-from app.config import settings
-from profile.infrastructure.persistence.repositories import (
-    SQLAlchemyProfileRepository,
-)
 
 auth = APIRouter(prefix='/auth', tags=['auth'])
 
 
-def get_auth_use_cases() -> AuthUseCases:
-    return AuthUseCases(
-        account_repository=SQLAlchemyAccountRepository(),
-        password_service=BcryptPasswordService(),
-        auth_service=JWTAuthService(settings.secret, settings.algorithm),
-        mail_sender=SMTPMailSender(),
-        cache_service=RedisCacheService(),
-        profile_repository=SQLAlchemyProfileRepository(),
-    )
-
-
 @auth.post('/registry')
 async def registry(
-        account: AccountRegisterSchema, auth: AuthUseCases = Depends(get_auth_use_cases)
+    account: AccountRegisterSchema,
+    auth: AuthUseCases = Depends(get_auth_use_cases),
 ) -> bool:
     try:
         return auth.register(
@@ -56,12 +34,14 @@ async def registry(
         )
     except AccountAlreadyExist as err:
         raise HTTPException(status_code=409, detail=str(err)) from err
+    except UsernameAlreadyExist as err:
+        raise HTTPException(status_code=409, detail=str(err)) from err
 
 
 @auth.post('/confirm_email')
 async def confirm_email(
-        attempt: EmailConfirmation,
-        auth: AuthUseCases = Depends(get_auth_use_cases),
+    attempt: EmailConfirmation,
+    auth: AuthUseCases = Depends(get_auth_use_cases),
 ) -> bool:
     try:
         res = auth.mail_confirmation(attempt.email, attempt.code)
@@ -76,7 +56,8 @@ async def confirm_email(
 
 @auth.post('/login')
 async def login(
-        account: AccountLoginSchema, auth: AuthUseCases = Depends(get_auth_use_cases)
+    account: AccountLoginSchema,
+    auth: AuthUseCases = Depends(get_auth_use_cases),
 ) -> dict:
     try:
         return auth.login(account.email, account.password)
@@ -90,8 +71,8 @@ async def login(
 
 @auth.get('/me', response_model=UserResponse)
 async def me(
-        token: str = Depends(get_bearer_token),
-        auth: AuthUseCases = Depends(get_auth_use_cases),
+    token: str = Depends(get_bearer_token),
+    auth: AuthUseCases = Depends(get_auth_use_cases),
 ) -> UserResponse:
     try:
         user = auth.get_current_user(token)
@@ -109,8 +90,8 @@ async def me(
 
 @auth.post('/logout', status_code=status.HTTP_204_NO_CONTENT)
 async def logout(
-        token: str = Depends(get_bearer_token),
-        auth: AuthUseCases = Depends(get_auth_use_cases),
+    token: str = Depends(get_bearer_token),
+    auth: AuthUseCases = Depends(get_auth_use_cases),
 ) -> Response:
     try:
         auth.logout(token)

@@ -1,14 +1,20 @@
 from profile.domain.entities import Profile
-from profile.domain.ports import ProfileRepository
+
+from account.application.interfaces.uow import UnitOfWork
 
 
 def create_profile(
-    profile_repository: ProfileRepository,
+    uow: UnitOfWork,
     user_id: int,
 ) -> Profile:
-    existing_profile = profile_repository.get_by_user_id(user_id)
-    if existing_profile is not None:
-        return existing_profile
+    with uow:
+        existing_profile = uow.profiles.get_by_user_id(user_id)
+        if existing_profile is not None:
+            return existing_profile
 
-    profile = Profile(user_id=user_id)
-    return profile_repository.save(profile)
+        profile = Profile(user_id=user_id)
+        profile = uow.profiles.save(profile)
+
+        uow.commit()
+
+        return profile
