@@ -7,36 +7,21 @@ export function useAuth() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const token = localStorage.getItem('accessToken');
-      if (token) {
-        const response = await authAPI.getCurrentUser();
-        if (response.success) {
-          setUser(response.data);
-          setIsAuthenticated(true);
-        } else {
-          localStorage.removeItem('accessToken');
-        }
-      }
-      setLoading(false);
-    };
-
-    checkAuth();
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      setIsAuthenticated(true);
+    }
+    setLoading(false);
   }, []);
 
   const register = async (userData) => {
-    const response = await authAPI.register(userData);
-    return response;
+    return authAPI.register(userData);
   };
 
   const login = async (email, password) => {
     const response = await authAPI.login(email, password);
     if (response.success) {
       setIsAuthenticated(true);
-      const userResponse = await authAPI.getCurrentUser();
-      if (userResponse.success) {
-        setUser(userResponse.data);
-      }
     }
     return response;
   };

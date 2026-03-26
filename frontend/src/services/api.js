@@ -1,181 +1,95 @@
-const API_BASE_URL = 'http://localhost:3000/api/v1';
-let registeredUser = null;
+const API_ORIGIN =
+  import.meta.env.VITE_API_ORIGIN || window.location.origin;
+const API_PREFIX = import.meta.env.VITE_API_PREFIX || '/api/v1';
+const API_BASE_URL = new URL(API_PREFIX, API_ORIGIN)
+  .toString()
+  .replace(/\/$/, '');
+
+async function request(path, options = {}) {
+  const { token, body, ...restOptions } = options;
+  const headers = new Headers(restOptions.headers || {});
+
+  if (body !== undefined) {
+    headers.set('Content-Type', 'application/json');
+  }
+
+  if (token) {
+    headers.set('Authorization', `Bearer ${token}`);
+  }
+
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    ...restOptions,
+    headers,
+    body: body !== undefined ? JSON.stringify(body) : undefined,
+  });
+
+  const rawText = await response.text();
+  const payload = rawText ? JSON.parse(rawText) : null;
+
+  if (!response.ok) {
+    return {
+      success: false,
+      status: response.status,
+      detail: payload?.detail || 'Ошибка запроса',
+      data: payload,
+    };
+  }
+
+  return {
+    success: true,
+    status: response.status,
+    data: payload,
+  };
+}
 
 export const authAPI = {
-  register: async (userData) => {
-    console.log('Registration request:', userData);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    if (!userData.username || !userData.email || !userData.password) {
-      return {
-        success: false,
-        status: 400,
-        detail: 'Невалидные входные данные'
-      };
-    }
-
-    if (!userData.email.includes('@')) {
-      return {
-        success: false,
-        status: 400,
-        detail: 'Введите корректный email'
-      };
-    }
-
-    if (userData.password.length < 6) {
-      return {
-        success: false,
-        status: 400,
-        detail: 'Пароль должен содержать минимум 6 символов'
-      };
-    }
-
-    if (userData.username.length < 3) {
-      return {
-        success: false,
-        status: 400,
-        detail: 'Имя пользователя должно содержать минимум 3 символа'
-      };
-    }
-
-    if (registeredUser && registeredUser.email === userData.email) {
-      return {
-        success: false,
-        status: 409,
-        detail: 'Пользователь с таким email уже существует'
-      };
-    }
-
-    if (registeredUser && registeredUser.username === userData.username) {
-      return {
-        success: false,
-        status: 409,
-        detail: 'Пользователь с таким именем уже существует'
-      };
-    }
-
-    const newUser = {
-      id: Math.floor(Math.random() * 1000),
-      email: userData.email,
-      username: userData.username,
-      password: userData.password,
-      profile: {
-        id: Math.floor(Math.random() * 1000),
-        uuid: crypto.randomUUID()
-      }
-    };
-
-    registeredUser = newUser;
-
-    return {
-      success: true,
-      status: 201,
-      data: {
-        user: {
-          id: newUser.id,
-          email: newUser.email,
-          username: newUser.username
-        },
-        profile: newUser.profile
-      }
-    };
+  register(userData) {
+    return request('/auth/registry', {
+      method: 'POST',
+      body: userData,
+    });
   },
 
-  login: async (email, password) => {
-    console.log('Login request:', { email, password });
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    if (!email || !password) {
-      return {
-        success: false,
-        status: 400,
-        detail: 'Невалидный формат запроса'
-      };
-    }
-
-    if (!registeredUser) {
-      return {
-        success: false,
-        status: 401,
-        detail: 'Неверный email или пароль'
-      };
-    }
-
-    if (registeredUser.email !== email || registeredUser.password !== password) {
-      return {
-        success: false,
-        status: 401,
-        detail: 'Неверный email или пароль'
-      };
-    }
-
-    const accessToken = 'mock-jwt-token-' + Date.now();
-    localStorage.setItem('accessToken', accessToken);
-
-    return {
-      success: true,
-      status: 200,
-      data: {
-        accessToken: accessToken,
-        tokenType: 'Bearer'
-      }
-    };
+  confirmEmail(email, code) {
+    return request('/auth/confirm_email', {
+      method: 'POST',
+      body: { email, code },
+    });
   },
 
-  logout: async () => {
-    console.log('Logout request');
-    await new Promise(resolve => setTimeout(resolve, 500));
+  async login(email, password) {
+    const response = await request('/auth/login', {
+      method: 'POST',
+      body: { email, password },
+    });
 
+    if (response.success && response.data?.access_token) {
+      localStorage.setItem('accessToken', response.data.access_token);
+    }
+
+    return response;
+  },
+
+  async logout() {
     const token = localStorage.getItem('accessToken');
 
-    if (!token) {
-      return {
-        success: false,
-        status: 401,
-        detail: 'Токен отсутствует или недействителен'
-      };
+    if (token) {
+      localStorage.removeItem('accessToken');
     }
-
-    localStorage.removeItem('accessToken');
 
     return {
       success: true,
       status: 204,
-      data: null
+      data: null,
     };
   },
 
-  getCurrentUser: async () => {
-    console.log('Get current user request');
-    await new Promise(resolve => setTimeout(resolve, 500));
-
-    const token = localStorage.getItem('accessToken');
-
-    if (!token) {
-      return {
-        success: false,
-        status: 401,
-        detail: 'Токен отсутствует или недействителен'
-      };
-    }
-
-    if (!registeredUser) {
-      return {
-        success: false,
-        status: 401,
-        detail: 'Пользователь не найден'
-      };
-    }
-
+  async getCurrentUser() {
     return {
-      success: true,
-      status: 200,
-      data: {
-        id: registeredUser.id,
-        email: registeredUser.email,
-        username: registeredUser.username,
-        profile: registeredUser.profile
-      }
+      success: false,
+      status: 501,
+      detail: 'Endpoint /auth/me ещё не реализован на backend',
+      data: null,
     };
-  }
+  },
 };
