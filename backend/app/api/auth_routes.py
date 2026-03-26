@@ -1,6 +1,6 @@
-"""Ручки FastApi приложения в контексте Authentication(пока что)"""
+"""Ручки FastAPI приложения в контексте Authentication"""
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 
 from account.application.exceptions import (
     AccountAlreadyExist,
@@ -18,7 +18,13 @@ from account.infrastructure.persistence.repositories import (
 from account.infrastructure.security import (
     BcryptPasswordService,
 )
-from app.api.schemas import AccountRegisterSchema, AccountLoginSchema, EmailConfirmation
+from app.api.dependencies import get_bearer_token
+from app.api.schemas import (
+    AccountLoginSchema,
+    AccountRegisterSchema,
+    EmailConfirmation,
+    UserResponse,
+)
 from app.config import settings
 from profile.infrastructure.persistence.repositories import (
     SQLAlchemyProfileRepository,
@@ -80,3 +86,37 @@ async def login(
         raise HTTPException(status_code=400, detail=str(err)) from err
     except AccountIsDeactivate as err:
         raise HTTPException(status_code=403, detail=str(err)) from err
+
+
+@auth.get('/me', response_model=UserResponse)
+async def me(
+        token: str = Depends(get_bearer_token),
+        auth: AuthUseCases = Depends(get_auth_use_cases),
+) -> UserResponse:
+    try:
+        user = auth.get_current_user(token)
+        return UserResponse(
+            id=user.id,
+            email=user.email,
+            username=user.username,
+        )
+    except (AccountNotFound, ValueError) as err:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail='Токен отсутствует или недействителен',
+        ) from err
+
+
+@auth.post('/logout', status_code=status.HTTP_204_NO_CONTENT)
+async def logout(
+        token: str = Depends(get_bearer_token),
+        auth: AuthUseCases = Depends(get_auth_use_cases),
+) -> Response:
+    try:
+        auth.logout(token)
+    except ValueError as err:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail='Токен отсутствует или недействителен',
+        ) from err
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
