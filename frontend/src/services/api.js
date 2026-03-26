@@ -5,7 +5,11 @@ const API_BASE_URL = new URL(API_PREFIX, API_ORIGIN)
   .toString()
   .replace(/\/$/, '');
 
-async function request(path, options = {}) {
+export function getAccessToken() {
+  return localStorage.getItem('accessToken');
+}
+
+export async function request(path, options = {}) {
   const { token, body, ...restOptions } = options;
   const headers = new Headers(restOptions.headers || {});
 
@@ -71,10 +75,17 @@ export const authAPI = {
   },
 
   async logout() {
-    const token = localStorage.getItem('accessToken');
+    const token = getAccessToken();
 
-    if (token) {
-      localStorage.removeItem('accessToken');
+    const response = await request('/auth/logout', {
+      method: 'POST',
+      token,
+    });
+
+    localStorage.removeItem('accessToken');
+
+    if (!response.success && response.status !== 401) {
+      return response;
     }
 
     return {
@@ -84,12 +95,10 @@ export const authAPI = {
     };
   },
 
-  async getCurrentUser() {
-    return {
-      success: false,
-      status: 501,
-      detail: 'Endpoint /auth/me ещё не реализован на backend',
-      data: null,
-    };
+  getCurrentUser() {
+    return request('/auth/me', {
+      method: 'GET',
+      token: getAccessToken(),
+    });
   },
 };
