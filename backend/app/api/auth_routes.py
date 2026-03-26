@@ -9,14 +9,14 @@ from account.application.exceptions import (
     InvalidPassword,
 )
 from account.application.use_cases import AuthUseCases
-from account.infrastructure.services import (
-    BcryptPasswordService,
-    JWTAuthService,
-    RedisCacheService,
-    SMTPMailSender,
-)
-from account.infrastructure.sqlalchemy_repository import (
+from account.infrastructure.auth import JWTAuthService
+from account.infrastructure.cache import RedisCacheService
+from account.infrastructure.notifications import SMTPMailSender
+from account.infrastructure.persistence.repositories import (
     SQLAlchemyAccountRepository,
+)
+from account.infrastructure.security import (
+    BcryptPasswordService,
 )
 from app.api.schemas import AccountRegisterSchema, AccountLoginSchema, EmailConfirmation
 from app.config import settings

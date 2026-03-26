@@ -5,7 +5,7 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 
 import app.db_registry
-from account.infrastructure.models import UserModel
+from account.infrastructure.persistence.models import UserModel
 from app.config import settings
 from app.db import Base
 
