@@ -1,0 +1,11 @@
+.git
+.idea
+.DS_Store
+.env
+.venv
+.mypy_cache
+.pytest_cache
+.ruff_cache
+__pycache__
+*.pyc
+docker-compose.yml
