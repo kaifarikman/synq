@@ -6,6 +6,10 @@ class AccountAlreadyExist(AccountException):
     pass
 
 
+class UsernameAlreadyExist(AccountException):
+    pass
+
+
 class AccountNotFound(AccountException):
     pass
 

@@ -1,1 +1,1 @@
-from .profile_read_model import ProfileReadModel
+from .profile_read_model import ProfileReadModel  # noqa: F401
