@@ -1,6 +1,6 @@
 """Сценарии использования Authentication"""
 
-from account.domain.entities import Account
+from account.application.read_models import CurrentUserReadModel
 from account.domain.ports import (
     AccountRepository,
     AuthService,
@@ -63,7 +63,7 @@ class AuthUseCases:
             enter_code=enter_code,
         )
 
-    def get_current_user(self, access_token: str) -> Account:
+    def get_current_user(self, access_token: str) -> CurrentUserReadModel:
         return get_current_user(
             account_repository=self.account_repository,
             auth_service=self.auth_service,
