@@ -8,6 +8,7 @@ from account.domain.ports import (
     MailSender,
     PasswordService,
 )
+from profile.domain.ports import ProfileRepository
 
 from .confirm_email import confirm_email
 from .get_current_user import get_current_user
@@ -24,12 +25,14 @@ class AuthUseCases:
         auth_service: AuthService,
         mail_sender: MailSender,
         cache_service: CacheService,
+        profile_repository: ProfileRepository,
     ):
         self.account_repository = account_repository
         self.password_service = password_service
         self.auth_service = auth_service
         self.mail_sender = mail_sender
         self.cache_service = cache_service
+        self.profile_repository = profile_repository
 
     def register(self, email: str, username: str, password: str) -> bool:
         return register(
@@ -55,6 +58,7 @@ class AuthUseCases:
         return confirm_email(
             account_repository=self.account_repository,
             cache_service=self.cache_service,
+            profile_repository=self.profile_repository,
             email=email,
             enter_code=enter_code,
         )

@@ -20,6 +20,9 @@ from account.infrastructure.security import (
 )
 from app.api.schemas import AccountRegisterSchema, AccountLoginSchema, EmailConfirmation
 from app.config import settings
+from profile.infrastructure.persistence.repositories import (
+    SQLAlchemyProfileRepository,
+)
 
 auth = APIRouter(prefix='/auth', tags=['auth'])
 
@@ -31,6 +34,7 @@ def get_auth_use_cases() -> AuthUseCases:
         auth_service=JWTAuthService(settings.secret, settings.algorithm),
         mail_sender=SMTPMailSender(),
         cache_service=RedisCacheService(),
+        profile_repository=SQLAlchemyProfileRepository(),
     )
 
 
