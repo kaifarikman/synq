@@ -25,9 +25,9 @@ export default function LoginPage() {
       if (result.success) {
         navigate('/dashboard');
       } else {
-        setError(result.message || 'Ошибка входа');
+        setError(result.detail || 'Ошибка входа');
       }
-    } catch (err) {
+    } catch {
       setError('Ошибка подключения к серверу');
     } finally {
       setLoading(false);
