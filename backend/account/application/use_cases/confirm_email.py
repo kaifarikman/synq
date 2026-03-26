@@ -4,6 +4,7 @@ from uuid import uuid4
 from account.application.exceptions import (
     AccountAlreadyExist,
     AccountHasNoId,
+    UsernameAlreadyExist,
 )
 from account.application.interfaces.cache_service import CacheService
 from account.application.interfaces.uow import UnitOfWork
@@ -25,9 +26,13 @@ def confirm_email(
         return False
 
     with uow:
-        exist = uow.accounts.get_by_email(email)
-        if exist:
+        exist_by_email = uow.accounts.get_by_email(email=email)
+        if exist_by_email:
             raise AccountAlreadyExist('Аккаунт с таким email уже существует')
+        
+        exist_by_username = uow.accounts.get_by_username(username=info['username'])
+        if exist_by_username:
+            raise UsernameAlreadyExist('Аккаунт с таким username уже существует')
 
         account = Account(
             id=None,
