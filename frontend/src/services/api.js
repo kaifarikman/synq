@@ -28,13 +28,24 @@ export async function request(path, options = {}) {
   });
 
   const rawText = await response.text();
-  const payload = rawText ? JSON.parse(rawText) : null;
+  let payload = null;
+
+  if (rawText) {
+    try {
+      payload = JSON.parse(rawText);
+    } catch {
+      payload = rawText;
+    }
+  }
 
   if (!response.ok) {
     return {
       success: false,
       status: response.status,
-      detail: payload?.detail || 'Ошибка запроса',
+      detail:
+        (typeof payload === 'object' && payload !== null && payload.detail) ||
+        (typeof payload === 'string' && payload) ||
+        'Ошибка запроса',
       data: payload,
     };
   }

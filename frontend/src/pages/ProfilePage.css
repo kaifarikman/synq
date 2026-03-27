@@ -1,0 +1,269 @@
+.profile-edit-container {
+  width: 100vw;
+  min-height: 100vh;
+  padding: 40px 20px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background:
+    radial-gradient(circle at 15% 25%, rgba(135, 206, 250, 0.3) 0%, transparent 40%),
+    #f8f9fa;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+}
+
+.edit-card {
+  max-width: 1000px;
+  width: 100%;
+  padding: 40px;
+  box-sizing: border-box;
+}
+
+.avatar-upload-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar-circle-large {
+  width: 200px;
+  height: 200px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 3px solid #74b9ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f2f6;
+  color: #0984e3;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-right: 20px;
+}
+
+.avatar-helper {
+  margin: 14px 0 0;
+  color: #636e72;
+  font-size: 0.9rem;
+}
+
+.edit-header {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 25px;
+  width: 100%;
+}
+
+.main-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px 40px;
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.input-group-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  min-width: 0;
+}
+
+.input-group-row label {
+  min-width: 130px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #2d3436;
+}
+
+.blue-input,
+.readonly-input {
+  flex-grow: 1;
+  min-width: 0;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  transition: 0.3s;
+  box-sizing: border-box;
+}
+
+.blue-input {
+  background: #74b9ff;
+  color: white;
+  font-weight: 500;
+}
+
+.blue-input::placeholder {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.blue-input:focus {
+  filter: brightness(1.1);
+  box-shadow: 0 0 0 3px rgba(116, 185, 255, 0.3);
+}
+
+.readonly-input {
+  background: rgba(255, 255, 255, 0.8);
+  color: #2d3436;
+  border: 1px solid #dfe6e9;
+}
+
+.edit-divider {
+  border: none;
+  border-top: 2px solid #74b9ff;
+  margin: 30px 0;
+  opacity: 0.4;
+}
+
+.section-title {
+  color: #74b9ff;
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+}
+
+.full-width-field {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 15px;
+  gap: 20px;
+}
+
+.full-width-field label {
+  min-width: 130px;
+  font-size: 1rem;
+  color: #2d3436;
+}
+
+.standard-input {
+  flex-grow: 1;
+  padding: 12px;
+  border: 1px solid #dfe6e9;
+  border-radius: 10px;
+  outline: none;
+  font-family: inherit;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+textarea.standard-input {
+  resize: vertical;
+  min-height: 110px;
+}
+
+.profile-error {
+  margin-bottom: 16px;
+}
+
+.profile-success {
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(46, 204, 113, 0.35);
+  background: rgba(46, 204, 113, 0.12);
+  color: #1e874b;
+}
+
+.profile-note {
+  color: #636e72;
+  line-height: 1.6;
+  margin-top: 12px;
+}
+
+.edit-footer-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 50px;
+  gap: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.btn-cancel-text {
+  background: none;
+  border: none;
+  color: #636e72;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.btn-cancel-text:hover {
+  color: #2d3436;
+}
+
+.btn-save-main {
+  padding: 14px 60px;
+  background: #74b9ff;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(116, 185, 255, 0.4);
+  transition: 0.3s;
+}
+
+.btn-save-main:hover {
+  background: #0984e3;
+  transform: translateY(-2px);
+}
+
+.btn-save-main:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.profile-loading {
+  color: #4a5568;
+  font-size: 1rem;
+}
+
+@media (max-width: 900px) {
+  .edit-header {
+    flex-direction: column;
+  }
+
+  .main-info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .edit-card {
+    padding: 24px;
+  }
+
+  .input-group-row,
+  .full-width-field {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .input-group-row label,
+  .full-width-field label {
+    min-width: 0;
+  }
+
+  .edit-footer-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-save-main {
+    width: 100%;
+  }
+}

@@ -1,0 +1,185 @@
+.profile-edit-container {
+  min-height: 100vh;
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle at 15% 25%, rgba(135, 206, 250, 0.3) 0%, transparent 40%), #f8f9fa;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.edit-card {
+  max-width: 1000px;
+  width: 100%;
+  /* Убрали background, backdrop-filter, border-radius и box-shadow */
+  padding: 40px;
+  box-sizing: border-box;
+  /* overflow: hidden; — тоже можно убрать, так как границ больше нет */
+}
+
+.avatar-circle-large {
+  width: 200px;
+  height: 200px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 3px solid #74b9ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f2f6;
+  color: #7f8c8d;
+  font-size: 1rem;
+  margin-right: 20px;
+}
+
+.edit-header {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 25px;
+  width: 100%;
+}
+
+.main-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px 40px;
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.input-group-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  min-width: 0;
+}
+
+.input-group-row label {
+  min-width: 130px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #2d3436;
+}
+
+.blue-input {
+  flex-grow: 1;
+  min-width: 0;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  background: #74b9ff;
+  color: white;
+  font-weight: 500;
+  outline: none;
+  transition: 0.3s;
+}
+
+.blue-input::placeholder {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.blue-input:focus {
+  filter: brightness(1.1);
+  box-shadow: 0 0 0 3px rgba(116, 185, 255, 0.3);
+}
+
+.edit-divider {
+  border: none;
+  border-top: 2px solid #74b9ff;
+  margin: 30px 0;
+  opacity: 0.4;
+}
+
+.section-title {
+  color: #74b9ff;
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+}
+
+.full-width-field {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  gap: 20px;
+}
+
+.full-width-field label {
+  min-width: 130px;
+  font-size: 1rem;
+}
+
+.standard-input {
+  flex-grow: 1;
+  padding: 12px;
+  border: 1px solid #dfe6e9;
+  border-radius: 10px;
+  outline: none;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+textarea.standard-input {
+  resize: vertical;
+}
+
+/* Кнопки */
+.resume-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.btn-upload-light {
+  padding: 10px 30px;
+  background: #f1f2f6;
+  border: 1px solid #ced4da;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-upload-light:hover {
+  background: #dfe6e9;
+}
+
+.edit-footer-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 50px;
+  gap: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.btn-cancel-text {
+  background: none;
+  border: none;
+  color: #636e72;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.btn-cancel-text:hover {
+  color: #2d3436;
+}
+
+.btn-save-main {
+  padding: 14px 60px;
+  background: #74b9ff;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(116, 185, 255, 0.4);
+  transition: 0.3s;
+}
+
+.btn-save-main:hover {
+  background: #0984e3;
+  transform: translateY(-2px);
+}

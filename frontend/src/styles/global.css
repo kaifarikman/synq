@@ -6,10 +6,20 @@ body {
     radial-gradient(circle at 15% 25%, rgba(135, 206, 250, 0.5) 0%, transparent 45%),
     radial-gradient(circle at 85% 75%, rgba(173, 216, 230, 0.5) 0%, transparent 45%),
     #ffffff;
-  height: 100vh;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.auth-page-shell {
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 24px;
+  box-sizing: border-box;
 }
 
 .form-card {
