@@ -59,6 +59,11 @@ export default function DashboardPage() {
   const filledFields = completionFields.filter(Boolean).length;
   const completion = Math.round((filledFields / completionFields.length) * 100);
 
+  const handleLogout = async () => {
+    await logout();
+    navigate('/', { replace: true });
+  };
+
   return (
     <div className="profile-page-clean">
       <div className="profile-grid-clean">
