@@ -15,6 +15,7 @@ function getInitials(username) {
 export default function ProfilePage() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  
   const [form, setForm] = useState({
     full_name: '',
     bio: '',
